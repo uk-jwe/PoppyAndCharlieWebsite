@@ -7,6 +7,24 @@ import MediaPicker from '@/components/admin/MediaPicker'
 
 type SettingsWithMedia = (SiteSettings & { heroImage: Media | null; aboutImage: Media | null }) | null
 
+function Section({ title, children }: { title: string; children: React.ReactNode }) {
+  return (
+    <div className="border rounded-lg p-5 space-y-4">
+      <h2 className="font-semibold text-gray-800">{title}</h2>
+      {children}
+    </div>
+  )
+}
+
+function Field({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <div>
+      <label className="block text-sm font-medium mb-1">{label}</label>
+      {children}
+    </div>
+  )
+}
+
 interface Props {
   settings: SettingsWithMedia
 }
@@ -60,20 +78,6 @@ export default function SettingsClient({ settings }: Props) {
       alert('Failed to save settings')
     }
   }
-
-  const Section = ({ title, children }: { title: string; children: React.ReactNode }) => (
-    <div className="border rounded-lg p-5 space-y-4">
-      <h2 className="font-semibold text-gray-800">{title}</h2>
-      {children}
-    </div>
-  )
-
-  const Field = ({ label, children }: { label: string; children: React.ReactNode }) => (
-    <div>
-      <label className="block text-sm font-medium mb-1">{label}</label>
-      {children}
-    </div>
-  )
 
   const textInput = (value: string, onChange: (v: string) => void, placeholder?: string) => (
     <input type="text" value={value} onChange={e => onChange(e.target.value)} placeholder={placeholder}
