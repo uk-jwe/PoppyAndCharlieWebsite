@@ -74,5 +74,3 @@ function Field({ label, name, type = 'text', required, defaultValue }: {
     </div>
   )
 }
-
-export { EventForm }
