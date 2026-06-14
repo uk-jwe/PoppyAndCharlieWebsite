@@ -2,11 +2,14 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react'
 import Image from 'next/image'
+import CropModal from '@/components/admin/CropModal'
+import type { Area } from 'react-easy-crop'
 
 type MediaItem = {
   id: string
   filename: string
   altText: string
+  urlOriginal: string
   urlThumbnail: string
   width: number
   height: number
@@ -25,6 +28,9 @@ export default function MediaPage() {
   const [loading, setLoading] = useState(true)
   const [queue, setQueue] = useState<QueueItem[]>([])
   const [dragging, setDragging] = useState(false)
+  const [cropItem, setCropItem] = useState<MediaItem | null>(null)
+  const [cropSaving, setCropSaving] = useState(false)
+  const [cacheBusts, setCacheBusts] = useState<Record<string, number>>({})
   const inputRef = useRef<HTMLInputElement>(null)
   const uploadingRef = useRef(false)
 
@@ -74,6 +80,23 @@ export default function MediaPage() {
     if (!confirm(`Delete ${filename}?`)) return
     await fetch(`/api/admin/media/${id}`, { method: 'DELETE' })
     setItems(prev => prev.filter(i => i.id !== id))
+  }
+
+  async function applyCrop(area: Area) {
+    if (!cropItem) return
+    setCropSaving(true)
+    try {
+      const res = await fetch(`/api/admin/media/${cropItem.id}/crop`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ x: area.x, y: area.y, width: area.width, height: area.height }),
+      })
+      if (!res.ok) throw new Error('Crop failed')
+      setCacheBusts(prev => ({ ...prev, [cropItem.id]: Date.now() }))
+      setCropItem(null)
+    } finally {
+      setCropSaving(false)
+    }
   }
 
   const activeQueue = queue.filter(q => q.status !== 'done')
@@ -132,23 +155,41 @@ export default function MediaPage() {
         <p className="text-gray-500 text-sm">No media uploaded yet.</p>
       ) : (
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-          {items.map(item => (
-            <div key={item.id} className="border rounded-lg overflow-hidden bg-white">
-              <div className="relative aspect-video bg-gray-100">
-                <Image src={item.urlThumbnail} alt={item.altText} fill className="object-cover" sizes="200px" />
+          {items.map(item => {
+            const bust = cacheBusts[item.id] ? `?v=${cacheBusts[item.id]}` : ''
+            return (
+              <div key={item.id} className="border rounded-lg overflow-hidden bg-white">
+                <div className="relative aspect-video bg-gray-100">
+                  <Image src={`${item.urlThumbnail}${bust}`} alt={item.altText} fill className="object-cover" sizes="200px" />
+                </div>
+                <div className="p-2">
+                  <p className="text-xs font-medium truncate">{item.filename}</p>
+                  <p className="text-xs text-gray-400">{item.altText}</p>
+                  <p className="text-xs text-gray-400">{(item.size / 1024).toFixed(0)} KB</p>
+                  <div className="mt-1 flex gap-2">
+                    <button onClick={() => setCropItem(item)}
+                      className="text-xs text-blue-600 hover:underline">
+                      Crop
+                    </button>
+                    <button onClick={() => deleteItem(item.id, item.filename)}
+                      className="text-xs text-red-600 hover:underline">
+                      Delete
+                    </button>
+                  </div>
+                </div>
               </div>
-              <div className="p-2">
-                <p className="text-xs font-medium truncate">{item.filename}</p>
-                <p className="text-xs text-gray-400">{item.altText}</p>
-                <p className="text-xs text-gray-400">{(item.size / 1024).toFixed(0)} KB</p>
-                <button onClick={() => deleteItem(item.id, item.filename)}
-                  className="mt-1 text-xs text-red-600 hover:underline">
-                  Delete
-                </button>
-              </div>
-            </div>
-          ))}
+            )
+          })}
         </div>
+      )}
+
+      {cropItem && (
+        <CropModal
+          imageUrl={`${cropItem.urlOriginal}${cacheBusts[cropItem.id] ? `?v=${cacheBusts[cropItem.id]}` : ''}`}
+          onSave={applyCrop}
+          onClose={() => setCropItem(null)}
+          saving={cropSaving}
+        />
       )}
     </div>
   )
