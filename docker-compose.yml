@@ -24,13 +24,13 @@ services:
     container_name: poppyandcharlie-db
     restart: unless-stopped
     environment:
-      POSTGRES_DB: ${DB_NAME:-poppyandcharlie}
-      POSTGRES_USER: ${DB_USER:-pc_user}
+      POSTGRES_DB: poppyandcharlie
+      POSTGRES_USER: postgres
       POSTGRES_PASSWORD: ${DB_PASSWORD}
     volumes:
       - /data/poppyandcharlie/postgres-data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-pc_user} -d ${DB_NAME:-poppyandcharlie}"]
+      test: ["CMD-SHELL", "pg_isready -U postgres -d poppyandcharlie"]
       interval: 5s
       timeout: 5s
       retries: 10
