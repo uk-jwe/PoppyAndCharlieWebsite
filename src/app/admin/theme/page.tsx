@@ -15,6 +15,7 @@ export default async function ThemePage() {
       update: { preset: formData.get('preset') as string },
       create: { id: 'singleton', preset: formData.get('preset') as string },
     })
+    revalidatePath('/', 'layout')
     revalidatePath('/')
   }
 

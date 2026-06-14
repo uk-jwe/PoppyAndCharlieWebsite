@@ -1,7 +1,7 @@
 import { prisma } from '@/lib/prisma'
 import { themes, type ThemePreset } from '@/lib/themes'
 
-export const revalidate = 60
+export const dynamic = 'force-dynamic'
 
 async function getThemeVars(): Promise<string> {
   try {
