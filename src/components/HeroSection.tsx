@@ -1,6 +1,6 @@
 import Image from 'next/image'
 
-type ImageMedia = { urlOriginal: string; urlHero: string; altText: string; focalX: number; focalY: number } | null
+type ImageMedia = { urlOriginal: string; urlHero: string | null; altText: string; focalX: number; focalY: number } | null
 type Settings = { heroTitle?: string | null; heroSubtitle?: string | null; heroTagline?: string | null; heroImage?: ImageMedia } | null
 
 export default function HeroSection({ settings }: { settings: Settings }) {
@@ -17,7 +17,7 @@ export default function HeroSection({ settings }: { settings: Settings }) {
       {img && (
         <>
           <Image
-            src={img.urlHero}
+            src={img.urlHero ?? img.urlOriginal}
             alt={img.altText}
             fill
             priority
