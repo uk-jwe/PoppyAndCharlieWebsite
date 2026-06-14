@@ -4,16 +4,16 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import MediaPicker from '@/components/admin/MediaPicker'
+import type { Media } from '@prisma/client'
 
 export default function NewPhotoPage() {
   const router = useRouter()
-  const [mediaId, setMediaId] = useState<string | null>(null)
-  const [mediaUrl, setMediaUrl] = useState<string | null>(null)
+  const [media, setMedia] = useState<Media | null>(null)
   const [saving, setSaving] = useState(false)
 
   async function save(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
-    if (!mediaId) return alert('Please select an image')
+    if (!media) return alert('Please select an image')
     setSaving(true)
     const fd = new FormData(e.currentTarget)
     const res = await fetch('/api/admin/photos', {
@@ -23,7 +23,7 @@ export default function NewPhotoPage() {
         title:   fd.get('title'),
         caption: fd.get('caption'),
         order:   parseInt(fd.get('order') as string) || 999,
-        mediaId,
+        mediaId: media.id,
       }),
     })
     if (res.ok) {
@@ -44,10 +44,7 @@ export default function NewPhotoPage() {
       <form onSubmit={save} className="space-y-4">
         <div>
           <label className="block text-sm font-medium mb-1">Image *</label>
-          <MediaPicker
-            onSelect={(id, url) => { setMediaId(id); setMediaUrl(url) }}
-            selectedUrl={mediaUrl}
-          />
+          <MediaPicker value={media} onChange={setMedia} label="Select Image" />
         </div>
         <div>
           <label className="block text-sm font-medium mb-1">Title *</label>

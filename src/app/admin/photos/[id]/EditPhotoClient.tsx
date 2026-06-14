@@ -10,8 +10,7 @@ type PhotoWithMedia = Photo & { media: Media | null }
 
 export default function EditPhotoClient({ photo }: { photo: PhotoWithMedia }) {
   const router = useRouter()
-  const [mediaId, setMediaId] = useState<string>(photo.mediaId)
-  const [mediaUrl, setMediaUrl] = useState<string | null>(photo.media?.urlCard ?? null)
+  const [media, setMedia] = useState<Media | null>(photo.media ?? null)
   const [saving, setSaving] = useState(false)
 
   async function save(e: React.FormEvent<HTMLFormElement>) {
@@ -25,7 +24,7 @@ export default function EditPhotoClient({ photo }: { photo: PhotoWithMedia }) {
         title:   fd.get('title'),
         caption: fd.get('caption'),
         order:   parseInt(fd.get('order') as string) || photo.order,
-        mediaId,
+        mediaId: media?.id ?? photo.mediaId,
       }),
     })
     if (res.ok) {
@@ -46,10 +45,7 @@ export default function EditPhotoClient({ photo }: { photo: PhotoWithMedia }) {
       <form onSubmit={save} className="space-y-4">
         <div>
           <label className="block text-sm font-medium mb-1">Image *</label>
-          <MediaPicker
-            onSelect={(id, url) => { setMediaId(id); setMediaUrl(url) }}
-            selectedUrl={mediaUrl}
-          />
+          <MediaPicker value={media} onChange={setMedia} label="Select Image" />
         </div>
         <div>
           <label className="block text-sm font-medium mb-1">Title *</label>
