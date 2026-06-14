@@ -1,6 +1,6 @@
 import Image from 'next/image'
 
-type ImageMedia = { urlOriginal: string; altText: string; focalX: number; focalY: number } | null
+type ImageMedia = { urlCard: string; altText: string; focalX: number; focalY: number } | null
 type Settings = { aboutTitle?: string | null; aboutText?: string | null; aboutImage?: ImageMedia } | null
 
 export default function AboutSection({ settings }: { settings: Settings }) {
@@ -30,7 +30,7 @@ export default function AboutSection({ settings }: { settings: Settings }) {
             {img ? (
               <div className="relative aspect-[4/5] overflow-hidden">
                 <Image
-                  src={img.urlOriginal}
+                  src={img.urlCard}
                   alt={img.altText}
                   fill
                   sizes="(max-width: 768px) 100vw, 50vw"
