@@ -1,6 +1,7 @@
 import { prisma } from '@/lib/prisma'
 import Link from 'next/link'
 import { revalidatePath } from 'next/cache'
+import DeleteButton from '@/components/admin/DeleteButton'
 
 export default async function EventsPage() {
   const events = await prisma.event.findMany({ orderBy: { date: 'asc' } })
@@ -54,13 +55,7 @@ export default async function EventsPage() {
                   </td>
                   <td className="px-4 py-3 text-right space-x-2">
                     <Link href={`/admin/events/${e.id}`} className="text-blue-600 hover:underline">Edit</Link>
-                    <form action={deleteEvent} className="inline">
-                      <input type="hidden" name="id" value={e.id} />
-                      <button type="submit" className="text-red-600 hover:underline"
-                        onClick={e => { if (!confirm('Delete this event?')) e.preventDefault() }}>
-                        Delete
-                      </button>
-                    </form>
+                    <DeleteButton action={deleteEvent} id={e.id} noun="event" />
                   </td>
                 </tr>
               ))}

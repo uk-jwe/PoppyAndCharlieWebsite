@@ -1,6 +1,7 @@
 import { prisma } from '@/lib/prisma'
 import Link from 'next/link'
 import { revalidatePath } from 'next/cache'
+import DeleteButton from '@/components/admin/DeleteButton'
 
 export default async function VideosPage() {
   const videos = await prisma.video.findMany({ orderBy: { order: 'asc' } })
@@ -47,13 +48,7 @@ export default async function VideosPage() {
                   </td>
                   <td className="px-4 py-3 text-right space-x-2">
                     <Link href={`/admin/videos/${v.id}`} className="text-blue-600 hover:underline">Edit</Link>
-                    <form action={deleteVideo} className="inline">
-                      <input type="hidden" name="id" value={v.id} />
-                      <button type="submit" className="text-red-600 hover:underline"
-                        onClick={e => { if (!confirm('Delete this video?')) e.preventDefault() }}>
-                        Delete
-                      </button>
-                    </form>
+                    <DeleteButton action={deleteVideo} id={v.id} noun="video" />
                   </td>
                 </tr>
               ))}

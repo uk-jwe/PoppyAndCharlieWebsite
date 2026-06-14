@@ -2,6 +2,7 @@ import { prisma } from '@/lib/prisma'
 import Link from 'next/link'
 import { revalidatePath } from 'next/cache'
 import Image from 'next/image'
+import DeleteButton from '@/components/admin/DeleteButton'
 
 export default async function PhotosPage() {
   const photos = await prisma.photo.findMany({ include: { media: true }, orderBy: { order: 'asc' } })
@@ -39,13 +40,7 @@ export default async function PhotosPage() {
                 {p.caption && <p className="text-xs text-gray-500 truncate">{p.caption}</p>}
                 <div className="mt-2 flex gap-2 text-xs">
                   <Link href={`/admin/photos/${p.id}`} className="text-blue-600 hover:underline">Edit</Link>
-                  <form action={deletePhoto} className="inline">
-                    <input type="hidden" name="id" value={p.id} />
-                    <button type="submit" className="text-red-600 hover:underline"
-                      onClick={e => { if (!confirm('Delete this photo?')) e.preventDefault() }}>
-                      Delete
-                    </button>
-                  </form>
+                  <DeleteButton action={deletePhoto} id={p.id} noun="photo" />
                 </div>
               </div>
             </div>
