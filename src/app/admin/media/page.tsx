@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import Image from 'next/image'
 import CropModal from '@/components/admin/CropModal'
+import FocalPointModal from '@/components/admin/FocalPointModal'
 import type { Area } from 'react-easy-crop'
 
 type MediaItem = {
@@ -11,6 +12,9 @@ type MediaItem = {
   altText: string
   urlOriginal: string
   urlThumbnail: string
+  urlCard: string | null
+  focalX: number
+  focalY: number
   width: number
   height: number
   size: number
@@ -30,6 +34,8 @@ export default function MediaPage() {
   const [dragging, setDragging] = useState(false)
   const [cropItem, setCropItem] = useState<MediaItem | null>(null)
   const [cropSaving, setCropSaving] = useState(false)
+  const [focalItem, setFocalItem] = useState<MediaItem | null>(null)
+  const [focalSaving, setFocalSaving] = useState(false)
   const [cacheBusts, setCacheBusts] = useState<Record<string, number>>({})
   const inputRef = useRef<HTMLInputElement>(null)
   const uploadingRef = useRef(false)
@@ -80,6 +86,23 @@ export default function MediaPage() {
     if (!confirm(`Delete ${filename}?`)) return
     await fetch(`/api/admin/media/${id}`, { method: 'DELETE' })
     setItems(prev => prev.filter(i => i.id !== id))
+  }
+
+  async function saveFocalPoint(x: number, y: number) {
+    if (!focalItem) return
+    setFocalSaving(true)
+    try {
+      const res = await fetch(`/api/admin/media/${focalItem.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ focalX: x, focalY: y }),
+      })
+      if (!res.ok) throw new Error('Save failed')
+      setItems(prev => prev.map(i => i.id === focalItem.id ? { ...i, focalX: x, focalY: y } : i))
+      setFocalItem(null)
+    } finally {
+      setFocalSaving(false)
+    }
   }
 
   async function applyCrop(area: Area) {
@@ -171,6 +194,10 @@ export default function MediaPage() {
                       className="text-xs text-blue-600 hover:underline">
                       Crop
                     </button>
+                    <button onClick={() => setFocalItem(item)}
+                      className="text-xs text-purple-600 hover:underline">
+                      Focal
+                    </button>
                     <button onClick={() => deleteItem(item.id, item.filename)}
                       className="text-xs text-red-600 hover:underline">
                       Delete
@@ -189,6 +216,17 @@ export default function MediaPage() {
           onSave={applyCrop}
           onClose={() => setCropItem(null)}
           saving={cropSaving}
+        />
+      )}
+
+      {focalItem && (
+        <FocalPointModal
+          imageUrl={`${focalItem.urlCard ?? focalItem.urlOriginal}${cacheBusts[focalItem.id] ? `?v=${cacheBusts[focalItem.id]}` : ''}`}
+          initialX={focalItem.focalX}
+          initialY={focalItem.focalY}
+          onSave={saveFocalPoint}
+          onClose={() => setFocalItem(null)}
+          saving={focalSaving}
         />
       )}
     </div>
