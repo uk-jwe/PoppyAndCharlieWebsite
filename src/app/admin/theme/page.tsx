@@ -28,7 +28,7 @@ export default async function ThemePage() {
             const vars = themes[preset]
             return (
               <label key={preset}
-                className={`relative flex flex-col gap-2 p-4 border-2 rounded-lg cursor-pointer transition-colors ${current === preset ? 'border-gray-800' : 'border-gray-200 hover:border-gray-400'}`}>
+                className="relative flex flex-col gap-2 p-4 border-2 rounded-lg cursor-pointer transition-colors border-gray-200 hover:border-gray-400 has-[:checked]:border-gray-800">
                 <input type="radio" name="preset" value={preset} defaultChecked={current === preset} className="sr-only" />
                 <div className="flex gap-1.5">
                   {[vars['--color-bg'], vars['--color-accent'], vars['--color-text']].map((c, i) => (
