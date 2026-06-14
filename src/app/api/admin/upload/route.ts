@@ -13,8 +13,8 @@ export async function POST(request: Request) {
   if (!file || !file.type.startsWith('image/')) {
     return Response.json({ error: 'Invalid file' }, { status: 400 })
   }
-  if (file.size > 20 * 1024 * 1024) {
-    return Response.json({ error: 'File too large (max 20 MB)' }, { status: 400 })
+  if (file.size > 50 * 1024 * 1024) {
+    return Response.json({ error: 'File too large (max 50 MB)' }, { status: 400 })
   }
 
   const processed = await processUpload(file)
