@@ -31,7 +31,7 @@ export default async function PhotosPage() {
             <div key={p.id} className="border rounded-lg overflow-hidden bg-white">
               <div className="relative aspect-video bg-gray-100">
                 {p.media && (
-                  <Image src={p.media.urlCard} alt={p.media.altText} fill className="object-cover" sizes="300px" />
+                  <Image src={p.media.urlCard ?? p.media.urlOriginal} alt={p.media.altText} fill className="object-cover" sizes="300px" />
                 )}
               </div>
               <div className="p-2">
