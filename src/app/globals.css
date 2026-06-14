@@ -1,0 +1,38 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Lato:wght@300;400;700&family=Inter:wght@300;400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Raleway:wght@300;400;500;600&family=Merriweather:wght@400;700&family=Open+Sans:wght@400;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Default theme variables (warm). Overridden server-side via inline <style> from ThemeSettings. */
+:root {
+  --color-bg: #fdf6ed;
+  --color-bg-secondary: #f5ead6;
+  --color-text: #2c1810;
+  --color-text-muted: #7a5c4a;
+  --color-accent: #c17d3c;
+  --color-accent-hover: #a66830;
+  --color-border: #e8d5c0;
+  --font-heading: 'Playfair Display', Georgia, serif;
+  --font-body: 'Lato', system-ui, sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5, h6 { font-family: var(--font-heading); }
+
+.rich-text p  { margin-bottom: 1em; }
+.rich-text ul { list-style: disc; padding-left: 1.5em; margin-bottom: 1em; }
+.rich-text ol { list-style: decimal; padding-left: 1.5em; margin-bottom: 1em; }
+.rich-text li { margin-bottom: 0.25em; }
+.rich-text strong { font-weight: 700; }
+.rich-text em { font-style: italic; }
+.rich-text a { color: var(--color-accent); text-decoration: underline; }
+.rich-text a:hover { color: var(--color-accent-hover); }

@@ -1,0 +1,42 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_APP_URL: ${NEXT_PUBLIC_APP_URL:-https://poppyandcharlie.com}
+    container_name: poppyandcharlie
+    restart: unless-stopped
+    ports:
+      - "3006:3000"
+    env_file:
+      - .env
+    volumes:
+      - /data/poppyandcharlie/media:/app/public/media
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - pc-network
+
+  db:
+    image: postgres:16-alpine
+    container_name: poppyandcharlie-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${DB_NAME:-poppyandcharlie}
+      POSTGRES_USER: ${DB_USER:-pc_user}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - /data/poppyandcharlie/postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-pc_user} -d ${DB_NAME:-poppyandcharlie}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - pc-network
+
+networks:
+  pc-network:
+    driver: bridge

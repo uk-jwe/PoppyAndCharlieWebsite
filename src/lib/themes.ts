@@ -1,0 +1,48 @@
+export const themes = {
+  warm: {
+    '--color-bg': '#fdf6ed',
+    '--color-bg-secondary': '#f5ead6',
+    '--color-text': '#2c1810',
+    '--color-text-muted': '#7a5c4a',
+    '--color-accent': '#c17d3c',
+    '--color-accent-hover': '#a66830',
+    '--color-border': '#e8d5c0',
+    '--font-heading': "'Playfair Display', Georgia, serif",
+    '--font-body': "'Lato', system-ui, sans-serif",
+  },
+  minimal: {
+    '--color-bg': '#ffffff',
+    '--color-bg-secondary': '#f5f5f5',
+    '--color-text': '#1a1a1a',
+    '--color-text-muted': '#666666',
+    '--color-accent': '#1a1a1a',
+    '--color-accent-hover': '#333333',
+    '--color-border': '#e5e5e5',
+    '--font-heading': "'Inter', system-ui, sans-serif",
+    '--font-body': "'Inter', system-ui, sans-serif",
+  },
+  dark: {
+    '--color-bg': '#0f0f0f',
+    '--color-bg-secondary': '#1a1a1a',
+    '--color-text': '#f0ece6',
+    '--color-text-muted': '#a0998f',
+    '--color-accent': '#e8c97e',
+    '--color-accent-hover': '#d4b567',
+    '--color-border': '#2a2a2a',
+    '--font-heading': "'Cormorant Garamond', Georgia, serif",
+    '--font-body': "'Raleway', system-ui, sans-serif",
+  },
+  forest: {
+    '--color-bg': '#f2f5f0',
+    '--color-bg-secondary': '#e5ebe0',
+    '--color-text': '#1e2d1e',
+    '--color-text-muted': '#4a634a',
+    '--color-accent': '#3d6b47',
+    '--color-accent-hover': '#2d5237',
+    '--color-border': '#c8d8c0',
+    '--font-heading': "'Merriweather', Georgia, serif",
+    '--font-body': "'Open Sans', system-ui, sans-serif",
+  },
+} as const
+
+export type ThemePreset = keyof typeof themes

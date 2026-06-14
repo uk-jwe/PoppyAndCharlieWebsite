@@ -1,0 +1,150 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ── Better Auth models ─────────────────────────────────────────────────────────
+
+model User {
+  id            String    @id @default(cuid())
+  name          String
+  email         String    @unique
+  emailVerified Boolean   @default(false)
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  sessions      Session[]
+  accounts      Account[]
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  expiresAt DateTime
+  token     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Account {
+  id                    String    @id @default(cuid())
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@unique([providerId, accountId])
+}
+
+model Verification {
+  id         String    @id @default(cuid())
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime? @default(now())
+  updatedAt  DateTime? @updatedAt
+}
+
+// ── Content models ─────────────────────────────────────────────────────────────
+
+model Media {
+  id           String   @id @default(cuid())
+  filename     String
+  altText      String
+  focalX       Int      @default(50)
+  focalY       Int      @default(50)
+  width        Int?
+  height       Int?
+  mimeType     String
+  size         Int
+  urlOriginal  String
+  urlThumbnail String?
+  urlCard      String?
+  urlHero      String?
+  createdAt    DateTime @default(now())
+
+  heroFor  SiteSettings[] @relation("HeroImage")
+  aboutFor SiteSettings[] @relation("AboutImage")
+  photos   Photo[]
+}
+
+model SiteSettings {
+  id                 String  @id @default("singleton")
+  heroTitle          String  @default("Poppy & Charlie")
+  heroSubtitle       String  @default("Acoustic Duo")
+  heroTagline        String  @default("")
+  heroImageId        String?
+  aboutTitle         String  @default("About Us")
+  aboutText          String  @default("")
+  aboutImageId       String?
+  contactHeading     String  @default("Get In Touch")
+  contactSubtext     String  @default("")
+  contactEmail       String  @default("")
+  socialInstagram    String  @default("")
+  socialYoutube      String  @default("")
+  socialFacebook     String  @default("")
+  beholdWidgetId     String  @default("")
+  seoMetaTitle       String  @default("Poppy & Charlie")
+  seoMetaDescription String  @default("")
+
+  heroImage  Media? @relation("HeroImage", fields: [heroImageId], references: [id])
+  aboutImage Media? @relation("AboutImage", fields: [aboutImageId], references: [id])
+}
+
+model ThemeSettings {
+  id     String @id @default("singleton")
+  preset String @default("warm")
+}
+
+model Event {
+  id        String    @id @default(cuid())
+  title     String
+  date      DateTime?
+  venue     String
+  location  String    @default("")
+  ticketUrl String    @default("")
+  status    String    @default("upcoming")
+  notes     String    @default("")
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Video {
+  id          String   @id @default(cuid())
+  title       String
+  youtubeUrl  String
+  description String   @default("")
+  featured    Boolean  @default(true)
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Photo {
+  id        String   @id @default(cuid())
+  title     String
+  mediaId   String
+  caption   String   @default("")
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  media Media @relation(fields: [mediaId], references: [id])
+}

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Poppy &amp; Charlie</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #0a0a0a;
+      color: #f0ece6;
+      font-family: Georgia, serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    img {
+      width: 100%;
+      max-width: 480px;
+      height: auto;
+      display: block;
+      filter: grayscale(20%);
+    }
+
+    .text {
+      text-align: center;
+      margin-top: 2.5rem;
+    }
+
+    h1 {
+      font-size: clamp(2rem, 6vw, 3.5rem);
+      font-weight: 400;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.75rem;
+    }
+
+    p {
+      font-family: system-ui, sans-serif;
+      font-size: 0.95rem;
+      color: #a09890;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 2rem;
+    }
+
+    .links {
+      display: flex;
+      gap: 2rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    a {
+      font-family: system-ui, sans-serif;
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: #a09890;
+      text-decoration: none;
+      border-bottom: 1px solid #333;
+      padding-bottom: 2px;
+      transition: color 0.2s, border-color 0.2s;
+    }
+
+    a:hover {
+      color: #f0ece6;
+      border-color: #f0ece6;
+    }
+  </style>
+</head>
+<body>
+  <img src="PoppyAndCharlie.jpg" alt="Poppy and Charlie">
+  <div class="text">
+    <h1>Poppy &amp; Charlie</h1>
+    <p>New site coming soon</p>
+    <div class="links">
+      <a href="https://www.instagram.com/poppyandcharliemusic/" target="_blank" rel="noopener">Instagram</a>
+      <a href="https://www.youtube.com/@poppyandcharliemusic" target="_blank" rel="noopener">YouTube</a>
+      <a href="mailto:enquiries@poppyandcharlie.com">Get in touch</a>
+    </div>
+  </div>
+</body>
+</html>

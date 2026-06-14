@@ -1,0 +1,26 @@
+# Dependencies
+node_modules/
+
+# Next.js build output
+.next/
+out/
+
+# Environment files (never commit secrets)
+.env
+.env.local
+.env.development
+.env.production
+
+# Payload — auto-generated, rebuild with: npm run generate:types
+src/payload-types.ts
+
+# Uploaded media (persisted via Docker volume in production)
+public/media/*
+!public/media/.gitkeep
+
+# Deploy staging
+deploy-staging/
+
+# OS
+.DS_Store
+Thumbs.db

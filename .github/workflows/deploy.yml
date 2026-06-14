@@ -1,0 +1,30 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Write .env
+        run: |
+          rm -f .env
+          echo "NODE_ENV=production" >> .env
+          echo "TZ=Europe/London" >> .env
+          echo "NEXT_PUBLIC_APP_URL=https://poppyandcharlie.com" >> .env
+          echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> .env
+          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
+          echo "BETTER_AUTH_SECRET=${{ secrets.BETTER_AUTH_SECRET }}" >> .env
+          echo "BETTER_AUTH_URL=https://poppyandcharlie.com" >> .env
+          echo "UPLOAD_DIR=/uploads" >> .env
+
+      - name: Deploy
+        run: docker compose up -d --build
+
+      - name: Clean up env file
+        if: always()
+        run: rm -f .env

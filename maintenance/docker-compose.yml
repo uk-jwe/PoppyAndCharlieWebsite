@@ -1,0 +1,16 @@
+services:
+  poppyandcharlie:
+    build: .
+    container_name: poppyandcharlie
+    restart: unless-stopped
+    ports:
+      - "3006:3000"
+    networks:
+      - gigrequest_gigrequest-network
+      - proxy-network
+
+networks:
+  gigrequest_gigrequest-network:
+    external: true
+  proxy-network:
+    external: true
